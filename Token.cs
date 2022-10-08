@@ -41,7 +41,7 @@ namespace TTMC.LoginSystem
 		private static Token? GetToken(byte[] accessToken)
 		{
 			LoadTokens();
-			Token? token = list.Where(x => x.accessToken == accessToken).FirstOrDefault();
+			Token? token = list.Where(x => Convert.ToBase64String(x.accessToken) == Convert.ToBase64String(accessToken)).FirstOrDefault();
 			if (token != null)
 			{
 				if (DateTime.Now < token.expire1)
@@ -63,7 +63,7 @@ namespace TTMC.LoginSystem
 		internal static Token? Refresh(byte[] refreshToken)
 		{
 			LoadTokens();
-			Token? token = list.Where(x => x.refreshToken == refreshToken).FirstOrDefault();
+			Token? token = list.Where(x => Convert.ToBase64String(x.refreshToken) == Convert.ToBase64String(refreshToken)).FirstOrDefault();
 			if (token != null && list.Contains(token))
 			{
 				list.Remove(token);
