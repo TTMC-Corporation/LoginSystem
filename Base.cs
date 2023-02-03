@@ -48,10 +48,10 @@ namespace TTMC.LoginSystem
 			}
 			return null;
 		}
-		public static Token? Refresh(byte[] accessToken)
+		public static Token? Refresh(byte[] refreshToken)
 		{
 			LoadConfig();
-			return Token.Refresh(accessToken);
+			return Token.Refresh(refreshToken);
 		}
 		public static bool Register(string username, string password)
 		{
