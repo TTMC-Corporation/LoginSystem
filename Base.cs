@@ -1,9 +1,12 @@
 ﻿using Auram;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TTMC.LoginSystem
 {
 	public class Account
 	{
+		private static SHA512 sha = SHA512.Create();
 		private static Database accounts = new Database();
 		private static void LoadConfig()
 		{
@@ -29,20 +32,15 @@ namespace TTMC.LoginSystem
 			if (raw != null)
 			{
 				Guid guid = new Guid(raw);
-				string path = "Account" + Path.DirectorySeparatorChar + guid;
+				string path = "Account" + Path.DirectorySeparatorChar + guid + ".auram";
 				if (File.Exists(path))
 				{
-					try
+					Database user = new(path);
+					byte[] hashed = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+					byte[]? stored = user.Get("Password");
+					if (stored != null && Convert.ToHexString(stored) == Convert.ToHexString(hashed))
 					{
-						byte[] nzx = Encryption.Decrypt(File.ReadAllBytes(path), password);
-						if (new Guid(nzx) == guid)
-						{
-							return Token.Generate(guid);
-						}
-					}
-					catch
-					{
-						return null;
+						return Token.Generate(guid);
 					}
 				}
 			}
@@ -60,8 +58,17 @@ namespace TTMC.LoginSystem
 			{
 				Directory.CreateDirectory("Account");
 				Guid guid = Guid.NewGuid();
-				string path = "Account" + Path.DirectorySeparatorChar + guid;
-				File.WriteAllBytes(path, Encryption.Encrypt(guid.ToByteArray(), password));
+				string path = "Account" + Path.DirectorySeparatorChar + guid + ".auram";
+				while (File.Exists(path))
+				{
+					guid = Guid.NewGuid();
+					path = "Account" + Path.DirectorySeparatorChar + guid + ".auram";
+				}
+				Database user = new();
+				byte[] hashed = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+				user.Set("Username", username);
+				user.Set("Password", hashed);
+				user.Save(path);
 				accounts.Set(username, guid.ToByteArray());
 				SaveConfig();
 				return true;

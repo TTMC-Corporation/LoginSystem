@@ -12,13 +12,8 @@ namespace TTMC.LoginSystem
 		public DateTime expireAccess = DateTime.MinValue;
 		public DateTime expireRefresh = DateTime.MinValue;
 		private static Random random = new();
-		public bool valid
-		{
-			get
-			{
-				return DateTime.Now < expireAccess;
-			}
-		}
+		public bool validAccess { get { return DateTime.Now < expireAccess; } }
+		public bool validRefresh { get { return DateTime.Now < expireRefresh; } }
 		public byte[] ToByteArray()
 		{
 			List<byte> list = new();
