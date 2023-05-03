@@ -58,8 +58,8 @@ namespace Test
 			{
 				DoWork(token);
 				token = Account.Refresh(token.refreshToken);
-                Console.WriteLine("Token refreshed!");
-                if (token != null)
+				Console.WriteLine("Token refreshed!");
+				if (token != null)
 				{
 					DoWork(token);
 				}
