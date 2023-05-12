@@ -51,10 +51,14 @@ namespace TTMC.LoginSystem
 			LoadConfig();
 			return Token.Refresh(refreshToken);
 		}
-		public static bool Register(string username, string password)
+		public static bool Exists(string username)
+		{
+			return accounts.data.ContainsKey(username);
+		}
+		public static Database? Register(string username, string password)
 		{
 			LoadConfig();
-			if (!accounts.data.ContainsKey(username))
+			if (!Exists(username))
 			{
 				Directory.CreateDirectory("Account");
 				Guid guid = Guid.NewGuid();
@@ -71,9 +75,9 @@ namespace TTMC.LoginSystem
 				user.Save(path);
 				accounts.Set(username, guid.ToByteArray());
 				SaveConfig();
-				return true;
+				return user;
 			}
-			return false;
+			return null;
 		}
 		public static Guid? Auth(byte[] accessToken)
 		{

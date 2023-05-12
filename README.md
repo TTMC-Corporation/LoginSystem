@@ -51,8 +51,8 @@ namespace Test
 	{
 		private static void Main(string[] args)
 		{
-			bool success = Account.Register("Username", "Password");
-			Console.WriteLine("Registered: " + success);
+			Database? user = Account.Register("Username", "Password");
+			Console.WriteLine("Registered: " + user != null);
 			Token? token = Account.Login("Username", "Password");
 			if (token != null)
 			{
