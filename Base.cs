@@ -1,4 +1,4 @@
-﻿using Auram;
+﻿using TTMC.Auram;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -28,7 +28,7 @@ namespace TTMC.LoginSystem
 		public static Token? Login(string username, string password)
 		{
 			LoadConfig();
-			byte[]? raw = accounts.Get(username);
+			byte[]? raw = accounts.Get<byte[]>(username);
 			if (raw != null)
 			{
 				Guid guid = new Guid(raw);
@@ -37,7 +37,7 @@ namespace TTMC.LoginSystem
 				{
 					Database user = new(path);
 					byte[] hashed = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
-					byte[]? stored = user.Get("Password");
+					byte[]? stored = user.Get<byte[]>("Password");
 					if (stored != null && Convert.ToHexString(stored) == Convert.ToHexString(hashed))
 					{
 						return Token.Generate(guid);
@@ -53,6 +53,7 @@ namespace TTMC.LoginSystem
 		}
 		public static bool Exists(string username)
 		{
+			LoadConfig();
 			return accounts.data.ContainsKey(username);
 		}
 		public static Database? Register(string username, string password)
@@ -78,6 +79,11 @@ namespace TTMC.LoginSystem
 				return user;
 			}
 			return null;
+		}
+		public static Database? GetDatabase(Guid guid)
+		{
+			string path = "Account" + Path.DirectorySeparatorChar + guid + ".auram";
+			return new(path);
 		}
 		public static Guid? Auth(byte[] accessToken)
 		{

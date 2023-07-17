@@ -1,4 +1,4 @@
-﻿using Auram;
+﻿using TTMC.Auram;
 
 namespace TTMC.LoginSystem
 {
@@ -130,11 +130,11 @@ namespace TTMC.LoginSystem
 					string[] keys = db.data.Keys.Where(x => !x.Contains('/')).ToArray();
 					for (int i = 0; i < keys.Length; i++)
 					{
-						byte[]? owner = db.Get(i.ToString());
-						byte[]? rawExpireAccess = db.Get(i + "/expireAccess");
-						byte[]? rawExpireRefresh = db.Get(i + "/expireRefresh");
-						byte[]? rawAccessToken = db.Get(i + "/accessToken");
-						byte[]? rawRefreshToken = db.Get(i + "/refreshToken");
+						byte[]? owner = db.Get<byte[]>(i.ToString());
+						byte[]? rawExpireAccess = db.Get<byte[]>(i + "/expireAccess");
+						byte[]? rawExpireRefresh = db.Get<byte[]>(i + "/expireRefresh");
+						byte[]? rawAccessToken = db.Get<byte[]>(i + "/accessToken");
+						byte[]? rawRefreshToken = db.Get<byte[]>(i + "/refreshToken");
 						if (owner != null && rawExpireAccess != null && rawExpireRefresh != null && rawAccessToken != null && rawRefreshToken != null)
 						{
 							DateTime expire1 = DateTime.FromBinary(BitConverter.ToInt64(rawExpireAccess));

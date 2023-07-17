@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <Reference Include="Auram">
-      <HintPath>..\Auram\bin\Debug\net6.0\Auram.dll</HintPath>
+      <HintPath>..\Auram\API\bin\Debug\net7.0\Auram.dll</HintPath>
     </Reference>
   </ItemGroup>
 
